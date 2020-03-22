@@ -86,9 +86,6 @@ namespace SeniorCitizenCenterMod {
             Logger.logInfo(LOG_INITIALIZER, "NursingHomeInitializer.attemptInitialization -- Attempting Initialization");
             Singleton<LoadingManager>.instance.QueueLoadingAction(ActionWrapper(() => {
                 try {
-                    if (this.loadedLevel == LOADED_LEVEL_GAME) {
-                        this.StartCoroutine(this.initHealthcareMenu());
-                    }
                     if (this.loadedLevel == LOADED_LEVEL_GAME || this.loadedLevel == LOADED_LEVEL_ASSET_EDITOR) {
                         this.StartCoroutine(this.initNursingHomes(medicalBuildingInfo));
                         AddQueuedActionsToLoadingQueue();
@@ -132,43 +129,6 @@ namespace SeniorCitizenCenterMod {
 
             // Return null to try again next time
             return null;
-        }
-
-        private IEnumerator initHealthcareMenu() {
-            Logger.logInfo(LOG_INITIALIZER, "NursingHomeInitializer.attemptInitialization -- initHealthcareMenu");
-            int delay = 9999999;
-
-            // Run this endlessly every 600 frames (~10 seconds)
-            while (true) {
-                if(delay++ < 600) {
-                    yield return new WaitForEndOfFrame();
-                    continue;
-                }
-
-                // Start a reset and reinit
-                Logger.logInfo(LOG_INITIALIZER, "NursingHomeInitializer.attemptInitialization -- initHealthcareMenu -- Start");
-                Boolean failed = true;
-                PanelHelper.reset();
-
-                // Utilize 25 passes during initilization
-                for (int i = 0; i < 25; i++) {
-                    if (PanelHelper.initCustomHealthcareGroupPanel()) {
-                        failed = false;
-                        break;
-                    }
-                    yield return new WaitForEndOfFrame();
-                }
-
-                // Log an error message if the initilization took longer than 25 attempts
-                if(failed) {
-                    Logger.logError(LOG_INITIALIZER, "NursingHomeInitializer.attemptInitialization -- initHealthcareMenu -- FAILED");
-                }
-
-                Logger.logInfo(LOG_INITIALIZER, "NursingHomeInitializer.attemptInitialization -- initHealthcareMenu -- End");
-
-                // Reset the delay to 0 and start waiting again
-                delay = 0;
-            }
         }
 
         private IEnumerator initNursingHomes(BuildingInfo buildingToCopyFrom) {
