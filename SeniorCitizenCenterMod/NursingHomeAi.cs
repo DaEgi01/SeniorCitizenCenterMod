@@ -788,29 +788,6 @@ namespace SeniorCitizenCenterMod {
             int numRoomsOccupied;
             this.getOccupancyDetails(ref data, out numResidents, out numRoomsOccupied);
 
-            // Make the panel a little bit bigger to support the stats
-            UIComponent infoPanel = UIView.library.Get(PanelHelper.INFO_PANEL_NAME);
-            if (infoPanel.height < 349f) {
-                infoPanel.height = 350;
-            }
-
-            // Update the Upkeep Stats with custom value
-            int maintenance = this.GetResourceRate(buildingId, ref data, EconomyManager.Resource.Maintenance);
-            
-            UIComponent infoGroupPanel = infoPanel.Find(PanelHelper.INFO_GROUP_PANEL_NAME);
-            if(infoGroupPanel != null) {
-                UILabel upkeepLabel = infoGroupPanel.Find<UILabel>(PanelHelper.UPKEEP_LABEL_NAME);
-                if(upkeepLabel != null) {
-                    if (maintenance > 0) {
-                        String upkeepText = LocaleFormatter.FormatUpkeep(maintenance, false);
-                        upkeepLabel.text = upkeepText.Replace("Upkeep", "Profit");
-                        upkeepLabel.textColor = Color.green;
-                    } else {
-                        upkeepLabel.textColor = PanelHelper.originalUpkeepColor;
-                    }
-                }
-            }
-
             // Get Worker Data
             Citizen.BehaviourData workerBehaviourData = new Citizen.BehaviourData();
             int aliveWorkerCount = 0;
